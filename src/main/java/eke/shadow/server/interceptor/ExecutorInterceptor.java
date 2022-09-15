@@ -48,7 +48,7 @@ public class ExecutorInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        log.info("================ ExecutorInterceptor intercept... =====================");
+        log.debug("================ ExecutorInterceptor intercept... =====================");
         if(invocation.getTarget() instanceof Executor){
             // 解析 invocation 内容，获得 shadow 检查器 需要的参数
             ShadowParam checkParam = getCheckParam(invocation);
@@ -61,7 +61,7 @@ public class ExecutorInterceptor implements Interceptor {
 
             // 有检查不通过的，到主库，日志记录
             if(first.isPresent()){
-                log.info("================ ExecutorInterceptor intercept isShadow=false, cheker={}", first.get().getClass());
+                log.debug("================ ExecutorInterceptor intercept isShadow=false, cheker={}", first.get().getClass());
                 DataSourceContextHolder.setDataSourceKey(DataSourceKey.MAIN);
             }else{
                 DataSourceContextHolder.setDataSourceKey(DataSourceKey.SHADOW);
@@ -119,48 +119,6 @@ public class ExecutorInterceptor implements Interceptor {
         return false;
     }
 
-    public static void main1(String[] args) {
-        // 查找的字符串
-        String str = "select t.id,t.name INTO from imas_xmhk_ll t left join urrp_db.imas_ckbx_bl a on t.id=a.id";
-
-        //Java正则表达式以括号分组，第一个括号表示以"IMAS_"开头，第三个括号表示以" "(空格)结尾，中间括号为目标值，
-//        Pattern p = Pattern.compile("(INTO )(.*?)(\\()");
-        Pattern compile = Pattern.compile("(?<=from\\ ?)(.*?)(?=\\()");
-        Matcher m = compile.matcher(str.toUpperCase());
-
-        while(m.find()){
-            // 取出目标值
-            String matchStr = m.group(2);
-            System.out.println("匹配内容："+matchStr);
-            str = str.toUpperCase().replace(matchStr,matchStr+"_HL");
-            System.out.println(str);
-        }
-    }
-
-
-    public static void main(String[] args) {
-        String sql="select * from    know  t  left join message ms on ( id,\n" +
-                "title,\n" +
-                "content )  VALUES  ( ?,\n" +
-                "?,\n" +
-                "? )";
-//        String reg = "(?<=INTO).(?=\\()";
-        String reg = "INTO";
-        Matcher matcher = Pattern.compile(reg).matcher(sql);
-//        String group = matcher.group();
-//        System.out.println(group);
-//        INTO(.*?)\(
-        String filetext = "//@张小名: 25分//@李小花: 43分//@王力: 100分";
-        Pattern p = Pattern.compile("(?<=join)(.*?\\S)(?=\\ )");//正则表达式，取=和|之间的字符串，不包括=和|
-        Matcher m = p.matcher(sql.toLowerCase());
-
-        while(m.find()) {
-            System.out.println(m.group(0).trim());//m.group(1)不包括这两个字符
-        }
-
-
-    }
-
 
     private static List<String> getReferenceTableNames(String boundSql){
         List<String> result = new ArrayList<>(5);
@@ -173,8 +131,6 @@ public class ExecutorInterceptor implements Interceptor {
 
     @Override
     public Object plugin(Object target) {
-        log.info("================ ExecutorInterceptor plugin... =====================");
-        log.info("================ ExecutorInterceptor target={}}", target);
         return Interceptor.super.plugin(target);
     }
 
