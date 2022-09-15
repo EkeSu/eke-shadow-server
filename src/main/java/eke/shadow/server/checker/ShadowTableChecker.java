@@ -3,6 +3,7 @@ package eke.shadow.server.checker;
 import cn.hutool.core.util.StrUtil;
 import eke.shadow.server.checker.param.ShadowParam;
 import eke.shadow.server.common.SupportType;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @Author：eke
  * @Date：2022/9/10
  */
+@Component
 public class ShadowTableChecker extends AbstraceShadowChecker{
     @Override
     public SupportType getSuppotrType() {

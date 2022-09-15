@@ -111,7 +111,7 @@ public class ExecutorInterceptor implements Interceptor {
     private String matchTableName(String sql, Pattern o) {
         Matcher matcher = o.matcher(sql);
         if(matcher.find()){
-            return matcher.group();
+            return matcher.group().trim();
         }
 
         return StrUtil.EMPTY;
