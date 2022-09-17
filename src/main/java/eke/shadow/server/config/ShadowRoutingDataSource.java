@@ -11,7 +11,10 @@ public class ShadowRoutingDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        log.info("当前数据源 [{}]", DataSourceContextHolder.getDataSourceKey());
-        return DataSourceContextHolder.getDataSourceKey();
+        String dataSourceKey = DataSourceContextHolder.getDataSourceKey();
+        log.info("当前数据源 [{}]", dataSourceKey);
+        // remove threadlocal value
+        DataSourceContextHolder.clearDataSourceKey();
+        return dataSourceKey;
     }
 }
